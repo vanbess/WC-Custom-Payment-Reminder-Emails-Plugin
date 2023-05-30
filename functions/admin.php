@@ -38,28 +38,28 @@ function custom_payment_reminder_emails() {
         if (isset($_POST['submit'])) :
 
             // grab all subbed fields and save to db
-            $one_week_subj    = isset($_POST['email-subject-1-week']) ? strip_tags($_POST['email-subject-1-week']) : null;
-            $one_week_subj    = isset($_POST['email-subject-2-weeks']) ? strip_tags($_POST['email-subject-2-weeks']) : null;
-            $one_month_subj   = isset($_POST['email-subject-1-month']) ? strip_tags($_POST['email-subject-1-month']) : null;
-            $two_month_subj   = isset($_POST['email-subject-2-months']) ? strip_tags($_POST['email-subject-2-months']) : null;
-            $three_month_subj = isset($_POST['email-subject-3-months']) ? strip_tags($_POST['email-subject-3-months']) : null;
-            $one_week_cont    = isset($_POST['email-content-1-week']) ? strip_tags($_POST['email-content-1-week']) : null;
-            $one_week_cont    = isset($_POST['email-content-2-weeks']) ? strip_tags($_POST['email-content-2-weeks']) : null;
-            $one_month_cont   = isset($_POST['email-content-1-month']) ? strip_tags($_POST['email-content-1-month']) : null;
-            $two_month_cont   = isset($_POST['email-content-2-months']) ? strip_tags($_POST['email-content-2-months']) : null;
-            $three_month_cont = isset($_POST['email-content-3-months']) ? strip_tags($_POST['email-content-3-months']) : null;
+            $one_week_subj    = isset($_POST['email-subject-1-week']) ? sanitize_text_field($_POST['email-subject-1-week']) : null;
+            $two_week_subj    = isset($_POST['email-subject-2-weeks']) ? sanitize_text_field($_POST['email-subject-2-weeks']) : null;
+            $one_month_subj   = isset($_POST['email-subject-1-month']) ? sanitize_text_field($_POST['email-subject-1-month']) : null;
+            $two_month_subj   = isset($_POST['email-subject-2-months']) ? sanitize_text_field($_POST['email-subject-2-months']) : null;
+            $three_month_subj = isset($_POST['email-subject-3-months']) ? sanitize_text_field($_POST['email-subject-3-months']) : null;
+            $one_week_cont    = isset($_POST['email-content-1-week']) ? stripslashes(sanitize_textarea_field($_POST['email-content-1-week'])) : null;
+            $two_week_cont    = isset($_POST['email-content-2-weeks']) ? stripslashes(sanitize_textarea_field($_POST['email-content-2-weeks'])) : null;
+            $one_month_cont   = isset($_POST['email-content-1-month']) ? stripslashes(sanitize_textarea_field($_POST['email-content-1-month'])) : null;
+            $two_month_cont   = isset($_POST['email-content-2-months']) ? stripslashes(sanitize_textarea_field($_POST['email-content-2-months'])) : null;
+            $three_month_cont = isset($_POST['email-content-3-months']) ? stripslashes(sanitize_textarea_field($_POST['email-content-3-months'])) : null;
 
             // emails disabled/enabled
             update_option('pmt-emails-enable-disable', $_POST['emails-enable-disable']);
 
             // update
             update_option('email-subject-1-week', $one_week_subj);
-            update_option('email-subject-2-weeks', $one_week_subj);
+            update_option('email-subject-2-weeks', $two_week_subj);
             update_option('email-subject-1-month', $one_month_subj);
             update_option('email-subject-2-months', $two_month_subj);
             update_option('email-subject-3-months', $three_month_subj);
             update_option('email-content-1-week', $one_week_cont);
-            update_option('email-content-2-weeks', $one_week_cont);
+            update_option('email-content-2-weeks', $two_week_cont);
             update_option('email-content-1-month', $one_month_cont);
             update_option('email-content-2-months', $two_month_cont);
             update_option('email-content-3-months', $three_month_cont); ?>
@@ -142,7 +142,7 @@ function custom_payment_reminder_emails() {
                         <label for="email-content-1-week" class="block-label"><b><i>Email content - 1 week</i></b></label>
                     </p>
                     <p>
-                        <textarea id="email-content-1-week" name="email-content-1-week" class="regular-text" rows="10"><?php echo !is_null(get_option('email-content-1-week')) ? get_option('email-content-1-week') : ''; ?></textarea>
+                        <textarea oninput="autoResize(event)" id="email-content-1-week" name="email-content-1-week" class="regular-text auto-resize" rows="20"><?php echo !is_null(get_option('email-content-1-week')) ? get_option('email-content-1-week') : ''; ?></textarea>
                     </p>
 
                 </div>
@@ -159,7 +159,7 @@ function custom_payment_reminder_emails() {
                         <label for="email-content-2-weeks" class="block-label"><b><i>Email content - 2 weeks</i></b></label>
                     </p>
                     <p>
-                        <textarea id="email-content-2-weeks" name="email-content-2-weeks" class="regular-text" rows="10"><?php echo !is_null(get_option('email-content-2-weeks')) ? get_option('email-content-2-weeks') : ''; ?></textarea>
+                        <textarea oninput="autoResize(event)" id="email-content-2-weeks" name="email-content-2-weeks" class="regular-text auto-resize" rows="20"><?php echo !is_null(get_option('email-content-2-weeks')) ? get_option('email-content-2-weeks') : ''; ?></textarea>
                     </p>
 
                 </div>
@@ -176,7 +176,7 @@ function custom_payment_reminder_emails() {
                         <label for="email-content-1-month" class="block-label"><b><i>Email content - 1 month</i></b></label>
                     </p>
                     <p>
-                        <textarea id="email-content-1-month" name="email-content-1-month" class="regular-text" rows="10"><?php echo !is_null(get_option('email-content-1-month')) ? get_option('email-content-1-month') : ''; ?></textarea>
+                        <textarea oninput="autoResize(event)" id="email-content-1-month" name="email-content-1-month" class="regular-text auto-resize" rows="20"><?php echo !is_null(get_option('email-content-1-month')) ? get_option('email-content-1-month') : ''; ?></textarea>
                     </p>
                 </div>
 
@@ -193,10 +193,11 @@ function custom_payment_reminder_emails() {
                         <label for="email-content-2-months" class="block-label"><b><i>Email content - 2 months</i></b></label>
                     </p>
                     <p>
-                        <textarea id="email-content-2-months" name="email-content-2-months" class="regular-text" rows="10"><?php echo !is_null(get_option('email-content-2-months')) ? get_option('email-content-2-months') : ''; ?></textarea>
+                        <textarea oninput="autoResize(event)" id="email-content-2-months" name="email-content-2-months" class="regular-text auto-resize" rows="20"><?php echo !is_null(get_option('email-content-2-months')) ? get_option('email-content-2-months') : ''; ?></textarea>
                     </p>
                 </div>
 
+                <hr>
 
                 <!-- 3 months -->
                 <div class="custom_payment_reminder_emails_input_group">
@@ -210,7 +211,7 @@ function custom_payment_reminder_emails() {
                         <label for="email-content-3-months" class="block-label"><b><i>Email content - 3 months</i></b></label>
                     </p>
                     <p>
-                        <textarea id="email-content-3-months" name="email-content-3-months" class="regular-text" rows="10"><?php echo !is_null(get_option('email-content-3-months')) ? get_option('email-content-3-months') : ''; ?></textarea>
+                        <textarea oninput="autoResize(event)" id="email-content-3-months" name="email-content-3-months" class="regular-text auto-resize" rows="20"><?php echo !is_null(get_option('email-content-3-months')) ? get_option('email-content-3-months') : ''; ?></textarea>
                     </p>
                 </div>
 
@@ -282,6 +283,22 @@ function custom_payment_reminder_emails() {
                     console.log(response)
                 })
 
+            });
+        });
+
+        // Auto resize event for textare inputs
+        function autoResize(event) {
+            setTimeout(() => {
+                let textarea = event.target;
+                textarea.style.height = 'auto';
+                textarea.style.height = parseInt(10) + textarea.scrollHeight + 'px';
+            }, 2000);
+        }
+
+        const textareas = document.querySelectorAll('.auto-resize');
+        textareas.forEach(function(textarea) {
+            autoResize({
+                target: textarea
             });
         });
     </script>
