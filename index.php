@@ -40,7 +40,8 @@ add_action('init', function () {
  */
 add_filter('woocommerce_locate_template', 'pmt_rem_woo_template_path', 1, 3);
 
-function pmt_rem_woo_template_path($template, $template_name, $template_path) {
+function pmt_rem_woo_template_path($template, $template_name, $template_path)
+{
 
     global $woocommerce;
 
@@ -56,12 +57,27 @@ function pmt_rem_woo_template_path($template, $template_name, $template_path) {
     return $template;
 }
 
+// add_filter('woocommerce_email_classes', 'customize_customer_invoice_email_template', 10, 1);
+
+// function customize_customer_invoice_email_template($email_classes) {
+
+//     // Check if the customer invoice email is being sent
+//     if (isset($email_classes['WC_Email_Customer_Invoice'])) {
+//         // Set custom template path
+//         $email_classes['WC_Email_Customer_Invoice']->template_html = 'path/to/custom-customer-invoice-template.php';
+//     }
+
+//     return $email_classes;
+// }
+
+
 /**
  * Filter invoice email subject text
  */
 add_filter('woocommerce_email_subject_customer_invoice', 'my_custom_invoice_email_subject', 10, 2);
 
-function my_custom_invoice_email_subject($subject, $order) {
+function my_custom_invoice_email_subject($subject, $order)
+{
 
     // setup our placeholders
     $placeholders = [
@@ -107,23 +123,23 @@ function my_custom_invoice_email_subject($subject, $order) {
 
     if ($order->has_status(['pending', 'on-hold', 'part-payment'])) :
 
-        // order is >= 7 days old
-        if ($days_old >= 7 && $one_week_sent === 'no') :
+        // order is >= 7 days old and < 14 days old
+        if ($days_old >= 7 && $days_old < 14 && $one_week_sent === 'no') :
             return str_replace($placeholders, $replacements, $one_week_subj);
         endif;
 
-        // order is >= 14 days old
-        if ($days_old >= 14 && $two_week_sent === 'no') :
+        // order is >= 14 days old and < 30 days old
+        if ($days_old >= 14 && $days_old <30 && $two_week_sent === 'no') :
             return str_replace($placeholders, $replacements, $one_week_subj);
         endif;
 
-        // order is >= 30 days old
-        if ($days_old >= 30 && $one_month_sent === 'no') :
+        // order is >= 30 days old and < 60 days old
+        if ($days_old >= 30  && $days_old < 60 && $one_month_sent === 'no') :
             return str_replace($placeholders, $replacements, $one_month_subj);
         endif;
 
-        // order is >= 60 days old
-        if ($days_old >= 60 && $two_month_sent === 'no') :
+        // order is >= 60 days old and < 90 days old
+        if ($days_old >= 60 && $days_old < 90 && $two_month_sent === 'no') :
             return str_replace($placeholders, $replacements, $two_month_subj);
         endif;
 

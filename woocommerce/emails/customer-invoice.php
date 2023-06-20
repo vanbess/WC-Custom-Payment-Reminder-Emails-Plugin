@@ -55,11 +55,12 @@ $replacements = [
 	$order->get_billing_first_name(),
 	$order->get_billing_last_name(),
 	$order->get_order_number(),
-	$order->get_date_created(),
+	date('j F Y', strtotime($order->get_date_created())),
 	$order->get_payment_method(),
 	$order->get_shipping_method(),
 	$order->get_formatted_order_total()
 ];
+
 
 /**
  * Executes the e-mail header.
@@ -85,7 +86,7 @@ if ($order->has_status(['pending', 'on-hold', 'part-payment'])) :
 	// Order is older than a week 
 	// ===========================
 	// if ($age_in_days >= 7 && $one_week_cont && $one_week_sent === false) :
-	if ($age_in_days >= 7 && $one_week_cont && $one_week_sent === 'no') :
+	if ($age_in_days >= 7 && $age_in_days < 14 && $one_week_cont && $one_week_sent === 'no') :
 
 		error_log('7 Day payment reminder sent for Order ID' . $order->get_id());
 
@@ -101,11 +102,13 @@ if ($order->has_status(['pending', 'on-hold', 'part-payment'])) :
 		// update appropriate meta key so that we don't send the email twice
 		update_post_meta($order->get_id(), '_one_week_sent', 'yes');
 
+	endif;
+
 	// ===========================
 	// Order is older than 2 weeks
 	// ===========================
 	// if ($age_in_days >= 14 && $one_week_cont && $one_week_sent === false) :
-	if ($age_in_days >= 14 && $two_week_cont && $two_week_sent === 'no') :
+	if ($age_in_days >= 14 && $age_in_days < 30 && $two_week_cont && $two_week_sent === 'no') :
 
 		error_log('14 Day payment reminder sent for Order ID' . $order->get_id());
 
@@ -121,10 +124,12 @@ if ($order->has_status(['pending', 'on-hold', 'part-payment'])) :
 		// update appropriate meta key so that we don't send the email twice
 		update_post_meta($order->get_id(), '_two_week_sent', 'yes');
 
+	endif;
+
 	// ============================
 	// Order is older than a month
 	// ============================
-	elseif ($age_in_days >= 30 && $one_month_cont && $one_month_sent === 'no') :
+	if ($age_in_days >= 30 && $age_in_days < 60 && $one_month_cont && $one_month_sent === 'no') :
 
 		error_log('30 Day payment reminder sent for Order ID' . $order->get_id());
 
@@ -140,10 +145,12 @@ if ($order->has_status(['pending', 'on-hold', 'part-payment'])) :
 		// update appropriate meta key so that we don't send the email twice
 		update_post_meta($order->get_id(), '_one_month_sent', 'yes');
 
+	endif;
+
 	// ===============================
 	// Order is older than two months
 	// ===============================
-	elseif ($age_in_days >= 60 && $two_month_cont && $two_month_sent === 'no') :
+	if ($age_in_days >= 60 && $age_in_days < 90 && $two_month_cont && $two_month_sent === 'no') :
 
 		error_log('60 Day payment reminder sent for Order ID' . $order->get_id());
 
@@ -159,10 +166,12 @@ if ($order->has_status(['pending', 'on-hold', 'part-payment'])) :
 		// update appropriate meta key so that we don't send the email twice
 		update_post_meta($order->get_id(), '_two_month_sent', 'yes');
 
+	endif;
+
 	// =================================
 	// Order is older than three months
 	// =================================
-	elseif ($age_in_days >= 90 && $three_month_cont && $three_month_sent === 'no') :
+	if ($age_in_days >= 90 && $three_month_cont && $three_month_sent === 'no') :
 
 		error_log('90 Day payment reminder sent for Order ID' . $order->get_id());
 

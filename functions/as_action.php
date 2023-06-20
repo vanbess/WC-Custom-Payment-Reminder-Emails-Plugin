@@ -31,7 +31,7 @@ add_action('send_custom_pmt_reminder_invoice_emails', function () {
         'post_type'      => 'shop_order',
         'posts_per_page' => -1,
         'fields'         => 'ids',
-        'post_status'    => ['wc-pending', 'wc-part-payment']
+        'post_status'    => ['wc-pending', 'wc-part-payment', 'wc-on-hold']
     ]);
 
     error_log('Checking for order IDs...');
@@ -66,37 +66,54 @@ add_action('send_custom_pmt_reminder_invoice_emails', function () {
             $two_month_sent   = get_post_meta($order_id, '_two_month_sent', true) ? 'yes' : 'no';
             $three_month_sent = get_post_meta($order_id, '_three_month_sent', true) ? 'yes' : 'no';
 
-            // Check if the order meets the conditions for each interval
-            if ($age_in_days >= 7 && $one_week_sent === 'no') {
+            // If the order is less than 7 days old, skip it
+            if ($age_in_days < 7) {
+                error_log('Order ID ' . $order_id . ' is less than 7 days old, skipping');
+                continue;
+            }
+            
+            // if order is between 7 and 14 days old and 7-day email has not been sent
+            if ($age_in_days >= 7 && $age_in_days < 14 && $one_week_sent === 'no') {
 
                 error_log('Triggering 7-day email for order ID ' . $order_id);
                 WC()->mailer()->get_emails()['WC_Email_Customer_Invoice']->trigger($order_id);
 
-            } elseif ($age_in_days >= 14 && $two_week_sent === 'no') {
+            } 
+            
+            // if order is between 14 and 30 days old and 14-day email has not been sent
+            if ($age_in_days >= 14 && $age_in_days < 30 && $two_week_sent === 'no') {
 
                 error_log('Triggering 14-day email for order ID ' . $order_id);
                 WC()->mailer()->get_emails()['WC_Email_Customer_Invoice']->trigger($order_id);
 
-            } elseif ($age_in_days >= 30 && $one_month_sent === 'no') {
+            } 
+            
+            // if order is between 30 and 60 days old and 30-day email has not been sent
+            if ($age_in_days >= 30 && $age_in_days < 60 && $one_month_sent === 'no') {
 
                 error_log('Triggering 30-day email for order ID ' . $order_id);
                 WC()->mailer()->get_emails()['WC_Email_Customer_Invoice']->trigger($order_id);
 
-            } elseif ($age_in_days >= 60 && $two_month_sent === 'no') {
+            }
+            
+            // if order is between 60 and 90 days old and 60-day email has not been sent
+            if ($age_in_days >= 60 && $age_in_days < 90 && $two_month_sent === 'no') {
 
                 error_log('Triggering 60-day email for order ID ' . $order_id);
                 WC()->mailer()->get_emails()['WC_Email_Customer_Invoice']->trigger($order_id);
 
-            } elseif ($age_in_days >= 90 && $three_month_sent === 'no') {
+            }
+            
+            // if order is 90 days old or older and 90-day email has not been sent
+            if ($age_in_days >= 90 && $three_month_sent === 'no') {
 
                 error_log('Triggering 90-day email for order ID ' . $order_id);
                 WC()->mailer()->get_emails()['WC_Email_Customer_Invoice']->trigger($order_id);
 
-            } else {
-                error_log('Order ID ' . $order_id . ' does not meet the conditions for any interval, skipping.');
-            }
+            } 
 
-            error_log('Moving on to next order...');
+            // if no conditions met, move on to next order
+            error_log('Order ID '.$order_id.' does not meet the required conditions, or an email or emails have already been sent for it. Moving on to next order...');
 
         endforeach;
 
