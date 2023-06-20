@@ -91,7 +91,7 @@ if ($order->has_status(['pending', 'on-hold', 'part-payment'])) :
 		error_log('7 Day payment reminder sent for Order ID' . $order->get_id());
 
 		// add order note
-		$order->add_order_note('7 Day payment reminder send for order');
+		$order->add_order_note('7 Day payment reminder sent for order');
 
 		// replace placeholders in content and set content
 		$one_week_cont = str_replace($placeholders, $replacements, $one_week_cont);
@@ -113,7 +113,7 @@ if ($order->has_status(['pending', 'on-hold', 'part-payment'])) :
 		error_log('14 Day payment reminder sent for Order ID' . $order->get_id());
 
 		// add order note
-		$order->add_order_note('14 Day payment reminder send for order');
+		$order->add_order_note('14 Day payment reminder sent for order');
 
 		// replace placeholders in content and set content
 		$two_week_cont = str_replace($placeholders, $replacements, $one_week_cont);

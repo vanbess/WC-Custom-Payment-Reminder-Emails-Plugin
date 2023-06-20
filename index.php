@@ -38,24 +38,24 @@ add_action('init', function () {
 /**
  * WooCommerce template path filter for overriding WC templates from plugin directory
  */
-add_filter('woocommerce_locate_template', 'pmt_rem_woo_template_path', 1, 3);
+// add_filter('woocommerce_locate_template', 'pmt_rem_woo_template_path', 1, 3);
 
-function pmt_rem_woo_template_path($template, $template_name, $template_path)
-{
+// function pmt_rem_woo_template_path($template, $template_name, $template_path)
+// {
 
-    global $woocommerce;
+//     global $woocommerce;
 
-    // set plugin path to path which contains WC overrides (same structure to follow as when overriding WC templates via theme)
-    $plugin_path  = PMT_REM_PATH  . 'woocommerce/';
+//     // set plugin path to path which contains WC overrides (same structure to follow as when overriding WC templates via theme)
+//     $plugin_path  = PMT_REM_PATH  . 'woocommerce/';
 
-    // if file exists in plugin path, set our template to the template contained in our plugin
-    if (file_exists($plugin_path . $template_name)) :
-        return $plugin_path . $template_name;
-    endif;
+//     // if file exists in plugin path, set our template to the template contained in our plugin
+//     if (file_exists($plugin_path . $template_name)) :
+//         return $plugin_path . $template_name;
+//     endif;
 
-    // return template
-    return $template;
-}
+//     // return template
+//     return $template;
+// }
 
 // add_filter('woocommerce_email_classes', 'customize_customer_invoice_email_template', 10, 1);
 
@@ -69,7 +69,6 @@ function pmt_rem_woo_template_path($template, $template_name, $template_path)
 
 //     return $email_classes;
 // }
-
 
 /**
  * Filter invoice email subject text
@@ -130,7 +129,7 @@ function my_custom_invoice_email_subject($subject, $order)
 
         // order is >= 14 days old and < 30 days old
         if ($days_old >= 14 && $days_old <30 && $two_week_sent === 'no') :
-            return str_replace($placeholders, $replacements, $one_week_subj);
+            return str_replace($placeholders, $replacements, $two_weeks_subj);
         endif;
 
         // order is >= 30 days old and < 60 days old

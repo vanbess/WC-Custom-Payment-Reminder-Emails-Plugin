@@ -24,7 +24,7 @@ add_action('pmt_reminder_cancel_old_orders', function () {
 
     error_log('================ ORDER 90 DAY+ CANCELLATION CHECK START ================');
 
-    error_log('Setting up order query and executing');
+    error_log('Setting up order cancellation query and executing');
 
     // get the date 91 days ago
     $date_91_days_ago = date('Y-m-d', strtotime('-91 days'));
@@ -43,10 +43,13 @@ add_action('pmt_reminder_cancel_old_orders', function () {
         ]
     ]);
 
-    error_log('Checking for order IDs...');
+    error_log('Checking for order IDs to be cancelled...');
 
     // retrieve order ids
     $order_ids = $orders->posts;
+
+    // randomize order of order ids
+    shuffle($order_ids);
 
     // if order ids not empty
     if (!empty($order_ids)) :
@@ -75,7 +78,7 @@ add_action('pmt_reminder_cancel_old_orders', function () {
 
         endforeach;
 
-        error_log('Order ID loop complete, ending execution');
+        error_log('Order ID loop for cancelling orders complete, ending execution');
 
     // if $order_ids empty
     else :
