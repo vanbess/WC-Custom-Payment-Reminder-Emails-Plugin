@@ -1,4 +1,4 @@
-## SBWC Custom Payment Reminder Emails for WooCommerce
+## WooCommerce Plugin: Custom Payment Reminder Emails for WooCommerce
 
 - Adds admin page where custom email textual content and subject can be defined
 - Emails sent to pending and on hold orders
